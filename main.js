@@ -1,27 +1,16 @@
-const { app, BrowserWindow } = require('electron')
-const { Client } = require('pg');
+const { app, BrowserWindow } = require('electron');
 
-const client = new Client({
-    user: 'postgres',
-    password: '0000',
-    host: 'localhost',
-    port: 5432,
-    database: 'Test',
-    });
-
-client.connect();
-client.query('SELECT * FROM Users', (err, res) => {
-if (err) throw err;
-    console.log(res.rows);
-    client.end();
-});
-
+const path  = require('path');
 
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: {
+      sandbox:false,
+      preload: path.join(__dirname, './preloud.js')
+    }
   })
 
   win.loadFile('index.html')
@@ -29,5 +18,4 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow()
-
 })
