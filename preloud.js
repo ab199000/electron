@@ -4,7 +4,7 @@ const {contextBridge} = require('electron')
 async function connectClient(){
     const client = await new Client({
         user: 'postgres',
-        password: '0000',
+        password: '1234',
         host: 'localhost',
         port: 5432,
         database: 'Test',
