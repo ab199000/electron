@@ -1,0 +1,76 @@
+-- create table workers(
+-- 	id_worker serial PRIMARY KEY,
+-- 	post varchar(30),
+-- 	fio varchar(50),
+-- 	login varchar(30) NOT NULL unique,
+-- 	password varchar(30) not null,
+-- 	last_entry timestamp not null
+-- );
+
+-- create table clients (
+-- 	id_client serial PRIMARY KEY,
+-- 	fio varchar(50) not null,
+-- 	login varchar(30) not null unique,
+-- 	password varchar(30) not null,
+-- 	phone varchar(12) not null unique,
+-- 	pasport varchar(10) not null unique,
+-- 	mail varchar(30) not null unique,
+-- 	address varchar(50) not null,
+-- 	birthday date not null
+-- );
+
+
+-- create table details(
+-- 	id_detail serial PRIMARY KEY,
+-- 	id_client integer,
+-- 	name_detail varchar(30) not null,
+-- 	factory_number varchar(30) not null unique,
+-- 	foreign key (id_client) references clients (id_client)
+-- );
+
+-- create table orders(
+-- 	id_order serial PRIMARY KEY,
+-- 	date_create timestamp not null,
+-- 	id_client integer not null,
+-- 	status integer not null,--0 отменена, 1 - в ожидании, 2 - в работе, 3 - выполнено
+-- 	foreign key (id_client) references clients(id_client)
+-- );
+
+-- create table details_package(
+-- 	id_order integer not null,
+-- 	id_detail integer not null,
+-- 	type_of_flout varchar(50)  not null,
+-- 	description_problem varchar(150)  not null,
+-- 	status integer not null,--0 отменена, 1 - в ожидании, 2 - в работе, 3 - выполнено,
+-- 	id_worker integer not null,
+-- 	foreign key (id_order) references orders(id_order),
+-- 	foreign key (id_detail) references details(id_detail),
+-- 	foreign key (id_worker) references workers(id_worker)
+-- );
+
+
+
+select * from workers
+insert into workers (post,fio,login,password,last_entry) 
+values('Admin','Roma Dvoynishev','admin','123','2023-12-21 15:00:00');
+insert into workers (post,fio,login,password,last_entry) 
+values('Master','Liza Tikhanova','Liza','123','2023-12-21 15:00:00');
+insert into workers (post,fio,login,password,last_entry) 
+values('Master','Masha Shalygina','Masha','123','2023-12-21 15:00:00');
+insert into workers (post,fio,login,password,last_entry) 
+values('Master low','Gans Linger','gan','123','2023-12-21 15:00:00');
+
+select * from clients
+insert into clients (fio,login,password,phone,pasport,mail,address,birthday) 
+values('Иванов Бенедикт Всеволодович','ben','111','000000000000','0000000000','ben@mail.ru','Москва','2000-12-21');
+insert into clients (fio,login,password,phone,pasport,mail,address,birthday) 
+values('Смирнов Дональд Кириллович','don','111','+79123456789','0000000001','don@mail.ru','Москва','2000-12-21');
+insert into clients (fio,login,password,phone,pasport,mail,address,birthday) 
+values('Петрова Анна Сергеевна','anna','111','+79991234567','0000000002','ann@mail.ru','Москва','2000-12-21');
+
+
+insert into details (id_client,name_detail,factory_number) 
+values(1,'Двигатель','0001'),(1,'колесо-левое (переднее)','0002'),(1,'колесо-правое (переднее)','0003');
+insert into details (id_client,name_detail,factory_number) 
+values(2,'Двигатель','0005'),(2,'руль','0102'),(2,'кресло','000102');
+
