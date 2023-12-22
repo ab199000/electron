@@ -23,13 +23,26 @@ const getUsers = async () => {
     return Users.rows
 }
 
-const createUser = async (id,name,age) => {
+const createUser = async (fio,login,password,phone,pasport,mail,address,birthday) => {
     let client = await connectClient()
-    await client.query(`Insert into Users values (${id}, '${name}', ${age})`);
+    await client.query(`insert into clients (fio,login,password,phone,pasport,mail,address,birthday) 
+    values('${fio}','${login}','${password}','${phone}','${pasport}','${mail}','${address}','${birthday}');`);
     await client.end();
+    return true
 }
+
+const autorizationUser = async (login, password) => {
+    let client = await connectClient()
+    let User = await client.query(`select * from clients where login = '${login}' and password = '${password}'`);
+    await client.end();
+    console.log(User.rows);
+    return User.rows
+}
+
+
 contextBridge.exposeInMainWorld('api', {
     getUsers,
-    createUser
+    createUser,
+    autorizationUser
 })
 
