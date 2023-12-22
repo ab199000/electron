@@ -1,35 +1,3 @@
-// let btn = document.querySelector('.btn')
-// let list = document.querySelector('.list')
-// let btnAdd = document.querySelector('.addUser')
-
-
-// async function updateUsers(){
-//     let result = await window.api.getUsers()
-//     list.innerHTML = '';
-
-//     for(let i = 0; i < result.length; i++){
-//         let p = document.createElement('p')
-//         p.textContent = `Name: ${result[i].name}, age: ${result[i].age} `
-//         list.append(p)
-//     }
-// }
-
-// async function addUser(){
-//     let id = document.querySelector('.id').value
-//     let name = document.querySelector('.name').value
-//     let age = document.querySelector('.age').value
-
-//     await window.api.createUser(parseInt(id), name, parseInt(age))
-// }
-
-// btn.addEventListener('click', updateUsers )
-
-// btnAdd.addEventListener('click', async () => {
-//     await addUser()
-//     updateUsers()
-// })
-
-
 function clearInputs(block){
     const inputs = block.querySelectorAll('input')
     inputs.forEach(element => {
@@ -50,6 +18,7 @@ async function loginUser(login, password){
 function showProfil(user){
     const window = document.querySelector('.profilUser')
     window.classList.remove('hide')
+    console.log(user);
     window.innerHTML = `
     <h2>Profil: ${user.fio}</h2>
     <p>pasport: ${user.pasport}</p>
@@ -89,7 +58,7 @@ btnAuthorization.addEventListener('click', async()=>{
         return alert('Ошибка входа')
     }
     showProfil(user[0])
-    windowAut.classList.remove('hide')
+    windowAut.classList.add('hide')
 })
 
 const btnRegistrat = document.querySelector('.btnReg')
