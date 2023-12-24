@@ -1,0 +1,82 @@
+-- create table roles(
+-- 	id_role serial PRIMARY KEY,
+-- 	name_role varchar(30) not null unique
+-- );
+
+-- create table users (
+-- 	id_user serial PRIMARY KEY,
+-- 	login varchar(30) not null unique,
+-- 	password varchar(30) not null,
+-- 	fio varchar(50) not null,
+-- 	phone varchar(12) not null unique,
+-- 	pasport varchar(10) not null unique,
+-- 	mail varchar(30) not null unique,
+-- 	address varchar(50) not null,
+-- 	birthday date not null,
+-- 	last_entry timestamp not null,
+-- 	id_role integer,
+-- 	foreign key (id_role) references roles(id_role)
+-- );
+
+
+-- create table details(
+-- 	id_detail serial PRIMARY KEY,
+-- 	id_user integer,
+-- 	name_detail varchar(30) not null,
+-- 	factory_number varchar(30) not null unique,
+-- 	foreign key (id_user) references users (id_user)
+-- );
+
+-- create table orders(
+-- 	id_order serial PRIMARY KEY,
+-- 	date_create timestamp not null,
+-- 	id_user integer not null,
+-- 	status integer not null,--0 отменена, 1 - в ожидании, 2 - в работе, 3 - выполнено
+-- 	foreign key (id_user) references users(id_user)
+-- );
+
+-- create table details_package(
+-- 	id_order integer not null,
+-- 	id_detail integer not null,
+-- 	type_of_flout varchar(50)  not null,
+-- 	description_problem varchar(150)  not null,
+-- 	status integer not null,--0 отменена, 1 - в ожидании, 2 - в работе, 3 - выполнено,
+-- 	id_worker integer not null,
+-- 	foreign key (id_order) references orders(id_order),
+-- 	foreign key (id_detail) references details(id_detail),
+-- 	foreign key (id_worker) references users(id_user)
+-- );
+select * from roles
+insert into roles (name_role) values('Admin');
+insert into roles (name_role) values('Master');
+insert into roles (name_role) values('User');
+
+select * from users
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('admin','123','Roma Dvoynishev','000000000001','0000000001','rom@mail.ru','г. Москва','2004-02-13','2023-12-21 15:00:00',1);
+
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('Liza','123','Liza Tikhanova','000000000002','0000000002','liz@mail.ru','г. Москва','2004-05-08','2023-12-21 15:00:00',2);
+
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('Masha','123','Masha Shalygina','000000000003','0000000003','mash@mail.ru','г. Москва','2004-04-22','2023-12-21 15:00:00',2);
+
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('Gan','123','Gans Linger','000000000004','0000000004','gan@mail.ru','г. Москва','2000-01-01','2023-12-21 15:00:00',2);
+
+-- users
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('ben','111','Иванов Бенедикт Всеволодович','000000000005','0000000005','ben@mail.ru','г. Москва','2000-12-21','2023-12-21 15:00:00',3);
+
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('don','111','Смирнов Дональд Кириллович','000000000006','0000000006','don@mail.ru','г. Москва','2000-12-21','2023-12-21 15:00:00',3);
+
+insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
+values('anna','111','Петрова Анна Сергеевна','000000000007','0000000007','ann@mail.ru','г. Москва','2000-12-21','2023-12-21 15:00:00',3);
+
+
+insert into details (id_user,name_detail,factory_number) 
+values(5,'Двигатель','0001'),(5,'колесо-левое (переднее)','0002'),(5,'колесо-правое (переднее)','0003');
+insert into details (id_user,name_detail,factory_number) 
+values(6,'Двигатель','0005'),(6,'руль','0102'),(6,'кресло','000102');
+
