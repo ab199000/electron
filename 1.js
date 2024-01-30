@@ -1,3 +1,7 @@
+const { read } = require("original-fs");
+
+let role
+
 function clearInputs(block){
     const inputs = block.querySelectorAll('input')
     inputs.forEach(element => {
@@ -11,6 +15,18 @@ function normalDate(strintDate){
     return normalDate
 }
 
+function getRole(role){
+    if(role == 1){
+        return 'Admin'
+    }
+    else if(role == 2){
+        return 'Менеджер'
+    }
+    else{
+        return 'Простой чел'
+    }
+}
+
 async function loginUser(login, password){
     return await window.api.autorizationUser(login.trim(), password.trim())
 }
@@ -18,9 +34,10 @@ async function loginUser(login, password){
 function showProfil(user){
     const window = document.querySelector('.profilUser')
     window.classList.remove('hide')
+    
     console.log(user);
     window.innerHTML = `
-    <h2>Profil: ${user.fio}</h2>
+    <h2>Profil: ${user.fio} Вы ${getRole(user.id_role)}</h2>
     <p>pasport: ${user.pasport}</p>
     <p>birthday: ${normalDate(user.birthday)}</p>
     <p>address: ${user.address}</p>
@@ -57,9 +74,30 @@ btnAuthorization.addEventListener('click', async()=>{
     if(!user){
         return alert('Ошибка входа')
     }
+    else{
+        role = user[0].id_role
+        console.log(user)
+        console.log(user[0]);
+        alert(`You  ${role}`)
+        if(role == 1){
+            Admin()
+        }
+        else if(role == 2){
+            LightChel()
+        }
+        else{
+            Menedger()
+        }
+    }
     showProfil(user[0])
     windowAut.classList.add('hide')
 })
+
+function Admin(){}
+function LightChel(){
+    
+}
+function Menedger(){}
 
 const btnRegistrat = document.querySelector('.btnReg')
 btnRegistrat.addEventListener('click', async ()=>{

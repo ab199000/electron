@@ -56,7 +56,7 @@ insert into users (login,password,fio,phone,pasport, mail, address, birthday, la
 values('admin','123','Roma Dvoynishev','000000000001','0000000001','rom@mail.ru','г. Москва','2004-02-13','2023-12-21 15:00:00',1);
 
 insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
-values('Liza','123','Liza Tikhanova','000000000002','0000000002','liz@mail.ru','г. Москва','2004-05-08','2023-12-21 15:00:00',2);
+values('Liza','123','Liza Tikhonova','000000000002','0000000002','liz@mail.ru','г. Москва','2004-05-08','2023-12-21 15:00:00',2);
 
 insert into users (login,password,fio,phone,pasport, mail, address, birthday, last_entry, id_role) 
 values('Masha','123','Masha Shalygina','000000000003','0000000003','mash@mail.ru','г. Москва','2004-04-22','2023-12-21 15:00:00',2);

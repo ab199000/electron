@@ -18,14 +18,14 @@ async function connectClient(){
 
 const getUsers = async () => {
     let client = await connectClient()
-    let Users = await client.query('SELECT * FROM Users');
+    let Users = await client.query('SELECT * FROM users');
     await client.end();
     return Users.rows
 }
 
 const createUser = async (fio,login,password,phone,pasport,mail,address,birthday) => {
     let client = await connectClient()
-    await client.query(`insert into clients (fio,login,password,phone,pasport,mail,address,birthday) 
+    await client.query(`insert into users (fio,login,password,phone,pasport,mail,address,birthday) 
     values('${fio}','${login}','${password}','${phone}','${pasport}','${mail}','${address}','${birthday}');`);
     await client.end();
     return true
@@ -33,12 +33,16 @@ const createUser = async (fio,login,password,phone,pasport,mail,address,birthday
 
 const autorizationUser = async (login, password) => {
     let client = await connectClient()
-    let User = await client.query(`select * from clients where login = '${login}' and password = '${password}'`);
+    let User = await client.query(`select * from users where login = '${login}' and password = '${password}'`);
     await client.end();
     console.log(User.rows);
     return User.rows
 }
 
+const listDetails = async () =>{
+    let client = await connectClient()
+    let list = await client.query(`select * from details where id_user = `)
+}
 
 contextBridge.exposeInMainWorld('api', {
     getUsers,
