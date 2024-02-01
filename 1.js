@@ -1,4 +1,18 @@
 let role
+let id
+async function createListTypes(){
+    let selectTypes = document.querySelector(".defectType")
+
+    let list = await window.api.listTypes()
+
+    for(let i = 0; i<=list.length; i++){
+        let option = document.createElement("option")
+        option.value = list[i].id_defecte
+        option.innerHTML = list[i].name_defecte
+        selectTypes.append(option)
+    }
+}
+// createListTypes()
 
 function clearInputs(block){
     const inputs = block.querySelectorAll('input')
@@ -33,7 +47,6 @@ function showProfil(user){
     const window = document.querySelector('.profilUser')
     window.classList.remove('hide')
     
-    console.log(user);
     window.innerHTML = `
     <h2>Profil: ${user.fio} Вы ${getRole(user.id_role)}</h2>
     <p>pasport: ${user.pasport}</p>
@@ -51,6 +64,7 @@ btnRegWindow.addEventListener('click',()=>{
     windowReg.classList.remove('hide')
     clearInputs(windowAuth)
 })
+
 
 const btnAuthWindow = document.querySelector('.btnGoRegWindow') 
 btnAuthWindow.addEventListener('click',()=>{
@@ -74,26 +88,60 @@ btnAuthorization.addEventListener('click', async()=>{
     }
     else{
         role = user[0].id_role
-        console.log(user)
-        console.log(user[0]);
+        id = user[0].id_user
         alert(`You  ${role}`)
         if(role == 1){
             Admin()
         }
-        else if(role == 2){
+        else if(role == 3){
             LightChel()
         }
         else{
             Menedger()
         }
+        showWindow('exit')
     }
     showProfil(user[0])
     windowAut.classList.add('hide')
 })
 
-function Admin(){}
+async function Admin(){
+    let createReq = document.querySelector('.admin')
+    createReq.classList.remove('hide')
+    let list = await window.api.listReq()
+
+    let ul = document.querySelector('.listActivReqOk')
+    for (let i = 0; i < list.length; i++) {
+        let li = document.createElement("li")
+        li.innerHTML = `
+        <p>${list[i].name_equipment}</p>
+        <p>${list[i].description}</p>
+        <p>${list[i].name_defecte}</p>
+        `
+        if(!list[i].employer){
+            let p = document.createElement("p")
+            p.textContent='Назначьте исполнителя'
+            let btnCompl = document.createElement("button")
+            btnCompl.textContent = 'Подтвердить заявку'
+
+            let listEmloyers = await window.api.getEmployers()
+            let select = document.createElement('select')
+            for(let j = 0; j<listEmloyers.length; j++){
+                let option = document.createElement("option")
+                option.value = listEmloyers[j].id_user
+                option.innerHTML = listEmloyers[j].fio
+                select.append(option)
+            }
+            li.append(p, btnCompl, select)
+        } 
+        ul.append(li)
+    }
+}
+
 function LightChel(){
-    
+    let createReq = document.querySelector('.lightChel')
+    createReq.classList.remove('hide')
+    createListTypes()
 }
 function Menedger(){}
 
@@ -131,4 +179,21 @@ btnRegistrat.addEventListener('click', async ()=>{
     clearInputs(windowAuth)
 })
 
+const btnCreateReq = document.querySelector('.btnCreateReq') 
+btnCreateReq.addEventListener('click', async()=>{
+    const inputName = document.querySelector('.inpDetails')
+    const inputType = document.querySelector('.defectType')
+    const inputDescription = document.querySelector('.inpDesc')
+    if(!(inputName.value&&inputType.value&&inputDescription.value)){
+        return
+    }
+    await window.api.createRequest(inputName.value,inputType.value,inputDescription.value,id)
+    console.log('ok');
+})
 
+const btnExit = document.querySelector('.btnExit')
+btnExit.addEventListener('click',()=>{
+    let boxBtn = document.querySelector('.exit')
+    boxBtn.classList.remove('hide')
+    location.reload()
+})

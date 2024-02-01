@@ -34,6 +34,10 @@
         </div>
     </div>
 
+    <div class="exit hide">
+        <button class="btnExit">Выход</button>
+    </div>
+
     <div class="profilUser hide">
         <h2>Profil:</h2>
         <p>pasport</p>
@@ -45,17 +49,27 @@
     <div class="lightChel hide">
         <h3 class="request">Подать заявку на ремонт</h3>
         <p class="desc">Опишите проблему</p>
-        <input type="text" placeholder="Название оборудования">
-        <select name="defectType">
-            <option value="1" selected>Не включается</option>
+        <input type="text" placeholder="Название оборудования" class="inpDetails">
+        <select name="defectType" class="defectType">
+            <!-- <option value="1" selected>Не включается</option>
             <option value="2">Шумит</option>
             <option value="3">Работает нестабильно</option>
-            <option value="4">Тех. обслуживание</option>
+            <option value="4">Тех. обслуживание</option> -->
         </select>
-        <input type="text" placeholder="Описание возникновения">
-        <button>Отправить заявку</button>
+        <input type="text" placeholder="Описание возникновения" class="inpDesc">
+        <button class="btnCreateReq">Отправить заявку</button>
     </div>
+    <div class="admin hide">
+        <div class="activReqOk">
+            <h3 class="titleActiveOk">Активные не подтверждённые заявки</h3>
+            <ul class="listActivReqOk"></ul>
+        </div>
+        <div class="completedReq">
+            <h3 class="titleCompletedReq">Выполненные заявки</h3>
+            <ul class="listCompletedReq"></ul>
+        </div>
 
+    </div>
 
 
 

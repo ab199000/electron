@@ -23,10 +23,25 @@ const getUsers = async () => {
     return Users.rows
 }
 
+const getEmployers = async () => {
+    let client = await connectClient()
+    let Employers = await client.query('SELECT id_user, fio FROM users where id_role = 2');
+    await client.end();
+    return Employers.rows
+}
+
 const createUser = async (fio,login,password,phone,pasport,mail,address,birthday) => {
     let client = await connectClient()
     await client.query(`insert into users (fio,login,password,phone,pasport,mail,address,birthday) 
     values('${fio}','${login}','${password}','${phone}','${pasport}','${mail}','${address}','${birthday}');`);
+    await client.end();
+    return true
+}
+
+const createRequest = async (name_equipment, defect_type, description, id_client)=>{
+    let client = await connectClient()
+    await client.query(`insert into requests (name_equipment, defect_type, description, id_client, status, work_status) 
+    values('${name_equipment}','${defect_type}','${description}','${id_client}','0','0');`);
     await client.end();
     return true
 }
@@ -39,14 +54,31 @@ const autorizationUser = async (login, password) => {
     return User.rows
 }
 
-const listDetails = async () =>{
+const listTypes = async () =>{
     let client = await connectClient()
-    let list = await client.query(`select * from details where id_user = `)
+    let types = await client.query(`select * from defects_types`)
+    await client.end()
+    return types.rows
 }
+
+
+const listReq = async () =>{
+    let client = await connectClient()
+    let requests = await client.query(`select requests.name_equipment, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte from requests, defects_types where requests.defect_type = defects_types.id_defecte`)
+    await client.end()
+    return requests.rows
+}
+
+
+
 
 contextBridge.exposeInMainWorld('api', {
     getUsers,
     createUser,
-    autorizationUser
+    autorizationUser,
+    listTypes,
+    createRequest,
+    listReq,
+    getEmployers
 })
 
