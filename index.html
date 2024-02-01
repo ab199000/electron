@@ -42,14 +42,17 @@
         <p>mail</p>
     </div>
 
-    <div class="lightChel">
+    <div class="lightChel hide">
         <h3 class="request">Подать заявку на ремонт</h3>
         <p class="desc">Опишите проблему</p>
-        <input type="text" class="description" placeholder="описание">
-        <input type="text" class="loginReg" placeholder="login">
-        <select class="select">
-            <option disabled>Выберите детали</option>
+        <input type="text" placeholder="Название оборудования">
+        <select name="defectType">
+            <option value="1" selected>Не включается</option>
+            <option value="2">Шумит</option>
+            <option value="3">Работает нестабильно</option>
+            <option value="4">Тех. обслуживание</option>
         </select>
+        <input type="text" placeholder="Описание возникновения">
         <button>Отправить заявку</button>
     </div>
 

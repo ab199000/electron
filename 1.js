@@ -1,5 +1,3 @@
-const { read } = require("original-fs");
-
 let role
 
 function clearInputs(block){
@@ -99,6 +97,16 @@ function LightChel(){
 }
 function Menedger(){}
 
+function showWindow(nameClass){
+    const element = document.querySelector(`.${nameClass}`)
+    element.classList.remove('hide')
+}
+
+function hideWindow(nameClass){
+    const element = document.querySelector(`.${nameClass}`)
+    element.classList.add('hide')
+}
+
 const btnRegistrat = document.querySelector('.btnReg')
 btnRegistrat.addEventListener('click', async ()=>{
     const windowAuth = document.querySelector('.autoriz')
@@ -122,3 +130,5 @@ btnRegistrat.addEventListener('click', async ()=>{
     windowReg.classList.add('hide')
     clearInputs(windowAuth)
 })
+
+
