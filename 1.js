@@ -142,6 +142,7 @@ function LightChel(){
     let createReq = document.querySelector('.lightChel')
     createReq.classList.remove('hide')
     createListTypes()
+    createlistUset(id)
 }
 function Menedger(){}
 
@@ -179,7 +180,7 @@ btnRegistrat.addEventListener('click', async ()=>{
     clearInputs(windowAuth)
 })
 
-const btnCreateReq = document.querySelector('.btnCreateReq') 
+const btnCreateReq = document.querySelector('.btnCreateReq')
 btnCreateReq.addEventListener('click', async()=>{
     const inputName = document.querySelector('.inpDetails')
     const inputType = document.querySelector('.defectType')
@@ -188,8 +189,35 @@ btnCreateReq.addEventListener('click', async()=>{
         return
     }
     await window.api.createRequest(inputName.value,inputType.value,inputDescription.value,id)
+    clearInputs(document.querySelector('.lightChel'))
+    createlistUset(id)
     console.log('ok');
 })
+
+async function createlistUset(id){
+    let list = await window.api.listReqUser(id)
+    const ul = document.querySelector('.userlistRequests')
+    ul.innerHTML = "<h2>История заявок</h2>"
+    if(list.length == 0){
+        return ul.innerHTML = `<p>Заявок нет</p>`
+    }
+
+    for (let i = 0; i < list.length; i++) {
+        let li = document.createElement('li')
+        let employer = list[i].employer
+        if(!employer){
+            employer = 'исполнитель не определён!'
+        }
+        li.innerHTML = `
+        <p>Оборудование: ${list[i].name_equipment}</p>
+        <p>Описание: ${list[i].description}</p>
+        <p>Тип дефекта: ${list[i].name_defecte}</p>
+        <p>ID исполнителя: ${employer}</p>
+        <p>Дата: ${normalDate(list[i].date_create)}</p>
+        `
+        ul.append(li)
+    }
+}
 
 const btnExit = document.querySelector('.btnExit')
 btnExit.addEventListener('click',()=>{

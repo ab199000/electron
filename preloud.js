@@ -69,6 +69,13 @@ const listReq = async () =>{
     return requests.rows
 }
 
+const listReqUser = async (idUser) =>{
+    let client = await connectClient()
+    let requests = await client.query(`select requests.name_equipment, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte, requests.date_create from requests, defects_types where requests.defect_type = defects_types.id_defecte and requests.id_client = ${idUser}`)
+    await client.end()
+    return requests.rows
+} 
+
 
 
 
@@ -79,6 +86,7 @@ contextBridge.exposeInMainWorld('api', {
     listTypes,
     createRequest,
     listReq,
-    getEmployers
+    getEmployers,
+    listReqUser
 })
 

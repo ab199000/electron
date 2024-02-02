@@ -5,8 +5,8 @@ const { dialog } = require('electron')
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       sandbox:false,
       preload: path.join(__dirname, './preloud.js')
