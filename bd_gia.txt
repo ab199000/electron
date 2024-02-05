@@ -1,4 +1,4 @@
-CREATE TYPE req_statuses AS ENUM ('0','1','2');
+CREATE TYPE req_statuses AS ENUM ('0','1');
 CREATE TYPE work_statuses AS ENUM ('0','1','2');
 
 create table roles(

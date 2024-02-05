@@ -22,9 +22,8 @@ function clearInputs(block){
 }
 
 function normalDate(strintDate){
-    let date = new Date(strintDate).toUTCString()
-    let normalDate = `${new Date(date).getDate().toString()}.${(new Date(date).getMonth()+1).toString()}.${new Date(date).getFullYear().toString()}`
-    return normalDate
+    let date = new Date(strintDate)
+    return date.toLocaleDateString()
 }
 
 function getRole(role){
@@ -68,7 +67,8 @@ btnRegWindow.addEventListener('click',()=>{
 
 const btnAuthWindow = document.querySelector('.btnGoRegWindow') 
 btnAuthWindow.addEventListener('click',()=>{
-    
+    const windowAuth = document.querySelector('.autoriz')
+    const windowReg = document.querySelector('.registrat')
     windowReg.classList.add('hide')
     windowAuth.classList.remove('hide')
     clearInputs(windowReg)
@@ -110,6 +110,19 @@ async function Admin(){
     createReq.classList.remove('hide')
     let list = await window.api.listReq()
 
+    let ulDefects = document.querySelector(".listDefect")
+    let listDefects = await window.api.listDefects()
+    console.log(listDefects, listDefects.total)
+    listDefects.list.forEach((elem)=>{
+        let li = document.createElement("li")
+        li.innerHTML = `
+        <p>${elem.name_defecte}: ${(elem.count*100/listDefects.total.count).toFixed(2)}%</p>
+        `
+        ulDefects.append(li)
+    })
+
+
+
     let ul = document.querySelector('.listActivReqOk')
     for (let i = 0; i < list.length; i++) {
         let li = document.createElement("li")
@@ -133,10 +146,23 @@ async function Admin(){
                 select.append(option)
             }
             li.append(p, btnCompl, select)
+
+            btnCompl.addEventListener("click", async()=>{
+                console.log(list[i])
+                await window.api.confirmRequest(select.value, list[i].id_request)
+                console.log(await window.api.getEmployers())
+                ul.innerHTML = ''
+                ulDefects.innerHTML = ''
+                Admin()
+            })
         } 
         ul.append(li)
     }
+
+
 }
+
+
 
 function LightChel(){
     let createReq = document.querySelector('.lightChel')
@@ -225,3 +251,4 @@ btnExit.addEventListener('click',()=>{
     boxBtn.classList.remove('hide')
     location.reload()
 })
+

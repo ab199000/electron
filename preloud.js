@@ -4,7 +4,7 @@ const {contextBridge} = require('electron')
 async function connectClient(){
     const client = await new Client({
         user: 'postgres',
-        password: '1234',
+        password: '0000',
         host: 'localhost',
         port: 5432,
         database: 'Test',
@@ -64,7 +64,7 @@ const listTypes = async () =>{
 
 const listReq = async () =>{
     let client = await connectClient()
-    let requests = await client.query(`select requests.name_equipment, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte from requests, defects_types where requests.defect_type = defects_types.id_defecte`)
+    let requests = await client.query(`select requests.id_request, requests.name_equipment, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte from requests, defects_types where requests.defect_type = defects_types.id_defecte`)
     await client.end()
     return requests.rows
 }
@@ -76,7 +76,19 @@ const listReqUser = async (idUser) =>{
     return requests.rows
 } 
 
+const confirmRequest = async (idEmploer, idReq) => {
+    let client = await connectClient()
+    await client.query(`update requests set employer = ${idEmploer}, status = '1'  where id_request = ${idReq}`)
+    await client.end()
+}
 
+const listDefects = async() =>{
+    let client = await connectClient()
+    let list = await client.query("select name_defecte, count(defect_type) from requests, defects_types where defects_types.id_defecte = requests.defect_type group by name_defecte")
+    let total = await client.query("select count(defect_type) from requests")
+    await client.end()
+    return {list: list.rows, total: total.rows[0]}
+}
 
 
 contextBridge.exposeInMainWorld('api', {
@@ -87,6 +99,8 @@ contextBridge.exposeInMainWorld('api', {
     createRequest,
     listReq,
     getEmployers,
-    listReqUser
+    listReqUser,
+    confirmRequest,
+    listDefects
 })
 
