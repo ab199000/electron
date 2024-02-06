@@ -31,7 +31,7 @@ function getRole(role){
         return 'Admin'
     }
     else if(role == 2){
-        return 'Менеджер'
+        return 'Мастер'
     }
     else{
         return 'Простой чел'
@@ -97,7 +97,7 @@ btnAuthorization.addEventListener('click', async()=>{
             LightChel()
         }
         else{
-            Menedger()
+            Master()
         }
         showWindow('exit')
     }
@@ -115,6 +115,7 @@ async function Admin(){
     console.log(listDefects, listDefects.total)
     listDefects.list.forEach((elem)=>{
         let li = document.createElement("li")
+        li.className = 'liStatistic'
         li.innerHTML = `
         <p>${elem.name_defecte}: ${(elem.count*100/listDefects.total.count).toFixed(2)}%</p>
         `
@@ -127,13 +128,14 @@ async function Admin(){
     for (let i = 0; i < list.length; i++) {
         let li = document.createElement("li")
         li.innerHTML = `
-        <p>${list[i].name_equipment}</p>
-        <p>${list[i].description}</p>
-        <p>${list[i].name_defecte}</p>
+        <p><b>Оборудование:</b> ${list[i].name_equipment}</p>
+        <p><b>Описание проблемы:</b> ${list[i].description}</p>
+        <p><b>Тип дефекта:</b> ${list[i].name_defecte}</p>
+        <span class="status">В работе...<span/>
         `
         if(!list[i].employer){
             let p = document.createElement("p")
-            p.textContent='Назначьте исполнителя'
+            p.textContent='Назначьте исполнителя:'
             let btnCompl = document.createElement("button")
             btnCompl.textContent = 'Подтвердить заявку'
 
@@ -170,7 +172,11 @@ function LightChel(){
     createListTypes()
     createlistUset(id)
 }
-function Menedger(){}
+function Master(){
+    const window = document.querySelector('.master')
+    window.classList.remove('hide')
+    listMasterActiv()
+}
 
 function showWindow(nameClass){
     const element = document.querySelector(`.${nameClass}`)
@@ -252,3 +258,74 @@ btnExit.addEventListener('click',()=>{
     location.reload()
 })
 
+async function listMasterActiv(){
+    const ul = document.querySelector('.listReqActiv')
+    const ul2 = document.querySelector(".listCompletedReq2")
+    ul.innerHTML = ''
+    let listReq = await window.api.listReqMaster(id) 
+    console.log(listReq);
+    console.log(id);
+
+    for (let i = 0; i < listReq.length; i++) {
+        if(listReq[i].work_status == "1" ) {
+            let li = document.createElement("li")
+            li.innerHTML = `
+            <p><b>Оборудование:</b> ${listReq[i].name_equipment}</p>
+            <p><b>Описание проблемы:</b> ${listReq[i].description}</p>
+            <p><b>Тип дефекта:</b> ${listReq[i].name_defecte}</p>
+            <button data-id=${listReq[i].id_request} type="button" class="execute" >Выполнить</button>
+            <button type="button">Вызов менеджера</button>
+            ` 
+        
+            ul.append(li)
+        }else if(listReq[i].work_status == "2"){
+            console.log("dd")
+                let li = document.createElement("li")
+            li.innerHTML = `
+            <p><b>Оборудование:</b> ${listReq[i].name_equipment}</p>
+            <p><b>Описание проблемы:</b> ${listReq[i].description}</p>
+            <p><b>Тип дефекта:</b> ${listReq[i].name_defecte}</p>
+            ` 
+            ul2.append(li)
+            console.log(ul2)
+
+        }
+        // if(!list[i].employer){
+        //     let p = document.createElement("p")
+        //     p.textContent='Назначьте исполнителя'
+        //     let btnCompl = document.createElement("button")
+        //     btnCompl.textContent = 'Подтвердить заявку'
+
+        //     let listEmloyers = await window.api.getEmployers()
+        //     let select = document.createElement('select')
+        //     for(let j = 0; j<listEmloyers.length; j++){
+        //         let option = document.createElement("option")
+        //         option.value = listEmloyers[j].id_user
+        //         option.innerHTML = listEmloyers[j].fio
+        //         select.append(option)
+        //     }
+        //     li.append(p, btnCompl, select)
+
+        //     btnCompl.addEventListener("click", async()=>{
+        //         console.log(list[i])
+        //         await window.api.confirmRequest(select.value, list[i].id_request)
+        //         console.log(await window.api.getEmployers())
+        //         ul.innerHTML = ''
+        //         ulDefects.innerHTML = ''
+        //         Admin()
+        //     })
+        // } 
+        
+    }
+    const arrBtnExec =  document.querySelectorAll(".execute")
+    arrBtnExec.forEach(btn=>{
+    btn.addEventListener("click", async()=>{
+        await window.api.reqExecuted(btn.dataset.id)
+        listMasterActiv()
+    })
+})
+
+
+}
+
+//Выполнение заявки

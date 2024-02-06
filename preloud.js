@@ -78,7 +78,7 @@ const listReqUser = async (idUser) =>{
 
 const confirmRequest = async (idEmploer, idReq) => {
     let client = await connectClient()
-    await client.query(`update requests set employer = ${idEmploer}, status = '1'  where id_request = ${idReq}`)
+    await client.query(`update requests set employer = ${idEmploer}, status = '1', work_status='1'  where id_request = ${idReq}`)
     await client.end()
 }
 
@@ -88,6 +88,18 @@ const listDefects = async() =>{
     let total = await client.query("select count(defect_type) from requests")
     await client.end()
     return {list: list.rows, total: total.rows[0]}
+}
+
+const listReqMaster = async(idMaster) =>{
+    let client = await connectClient()
+    let list = await client.query(`select id_request, work_status, name_equipment, description, name_defecte from requests, defects_types where id_defecte = defect_type and  employer = ${idMaster}`)
+    await client.end()
+    return list.rows
+}
+
+const reqExecuted = async(idReq)=>{
+    let client = await connectClient()
+    await client.query(`update requests set work_status='2' where  id_request = ${idReq}`)
 }
 
 
@@ -101,6 +113,8 @@ contextBridge.exposeInMainWorld('api', {
     getEmployers,
     listReqUser,
     confirmRequest,
-    listDefects
+    listDefects,
+    listReqMaster,
+    reqExecuted
 })
 
