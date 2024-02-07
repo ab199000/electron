@@ -32,8 +32,8 @@ const getEmployers = async () => {
 
 const createUser = async (fio,login,password,phone,pasport,mail,address,birthday) => {
     let client = await connectClient()
-    await client.query(`insert into users (fio,login,password,phone,pasport,mail,address,birthday) 
-    values('${fio}','${login}','${password}','${phone}','${pasport}','${mail}','${address}','${birthday}');`);
+    await client.query(`insert into users (fio,login,password,phone,pasport,mail,address,birthday,last_entry) 
+    values('${fio}','${login}','${password}','${phone}','${pasport}','${mail}','${address}','${birthday}',now());`);
     await client.end();
     return true
 }
@@ -71,10 +71,10 @@ const listReq = async () =>{
 
 const listReqUser = async (idUser) =>{
     let client = await connectClient()
-    let requests = await client.query(`select requests.name_equipment, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte, requests.date_create from requests, defects_types where requests.defect_type = defects_types.id_defecte and requests.id_client = ${idUser}`)
+    let requests = await client.query(`select requests.name_equipment, requests.finished_date, requests.defect_type, requests.description, requests.id_client, requests.status, requests.work_status, requests.employer, defects_types.name_defecte, requests.date_create from requests, defects_types where requests.defect_type = defects_types.id_defecte and requests.id_client = ${idUser}`)
     await client.end()
     return requests.rows
-} 
+}
 
 const confirmRequest = async (idEmploer, idReq) => {
     let client = await connectClient()
@@ -99,7 +99,8 @@ const listReqMaster = async(idMaster) =>{
 
 const reqExecuted = async(idReq)=>{
     let client = await connectClient()
-    await client.query(`update requests set work_status='2' where  id_request = ${idReq}`)
+    await client.query(`update requests set work_status='2', finished_date = now() where  id_request = ${idReq}`)
+    await client.end()
 }
 
 

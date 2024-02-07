@@ -5,7 +5,7 @@ async function createListTypes(){
 
     let list = await window.api.listTypes()
 
-    for(let i = 0; i<=list.length; i++){
+    for(let i = 0; i<list.length; i++){
         let option = document.createElement("option")
         option.value = list[i].id_defecte
         option.innerHTML = list[i].name_defecte
@@ -32,6 +32,9 @@ function getRole(role){
     }
     else if(role == 2){
         return 'Мастер'
+    }
+    else if(role == 2){
+        return 'Менеджер'
     }
     else{
         return 'Простой чел'
@@ -96,6 +99,9 @@ btnAuthorization.addEventListener('click', async()=>{
         else if(role == 3){
             LightChel()
         }
+        else if(role == 4){
+            Menedger()
+        }
         else{
             Master()
         }
@@ -124,14 +130,30 @@ async function Admin(){
 
 
 
-    let ul = document.querySelector('.listActivReqOk')
+    let ul
     for (let i = 0; i < list.length; i++) {
+        ul = document.querySelector('.listActivReqOk')
+        if (list[i].status == 1) {
+            ul = document.querySelector('.listCompletedReq')
+        }
         let li = document.createElement("li")
+        console.log(list);
+        let work_status
+
+        if(list[i].work_status == 0){
+            work_status = 'Ожидание'
+        } 
+        else if(list[i].work_status == 1){
+            work_status = 'В обработке'
+        }
+        else if(list[i].work_status == 2){
+            work_status = 'Завершён'
+        }
         li.innerHTML = `
         <p><b>Оборудование:</b> ${list[i].name_equipment}</p>
         <p><b>Описание проблемы:</b> ${list[i].description}</p>
         <p><b>Тип дефекта:</b> ${list[i].name_defecte}</p>
-        <span class="status">В работе...<span/>
+        <span class="status">${work_status}<span/>
         `
         if(!list[i].employer){
             let p = document.createElement("p")
@@ -178,6 +200,11 @@ function Master(){
     listMasterActiv()
 }
 
+function Menedger(){
+    const window = document.querySelector('.menedger')
+    window.classList.remove('hide')
+}
+
 function showWindow(nameClass){
     const element = document.querySelector(`.${nameClass}`)
     element.classList.remove('hide')
@@ -201,7 +228,12 @@ btnRegistrat.addEventListener('click', async ()=>{
     const address = document.querySelector('.addressReg').value
     const birthday = document.querySelector('.birthdayReg').value
 
-    let createUser = await window.api.createUser(fio,login,password,phone,pasport,mail,address,birthday)
+    let dateBirth = birthday.split('-')
+    console.log(dateBirth);
+    let birthdayNorm = `${dateBirth[2]}-${dateBirth[1]}-${dateBirth[0]}`
+    console.log(birthdayNorm);
+
+    let createUser = await window.api.createUser(fio,login,password,phone,pasport,mail,address,birthdayNorm)
 
     if(!createUser){
         return console.log('ошибка');
@@ -247,6 +279,12 @@ async function createlistUset(id){
         <p>ID исполнителя: ${employer}</p>
         <p>Дата: ${normalDate(list[i].date_create)}</p>
         `
+        console.log(list);
+        if(list[i].work_status==2){
+            let p = document.createElement('p')
+            p.textContent = `Дата завершения: ${normalDate(list[i].finished_date)}`
+            li.append(p)
+        }
         ul.append(li)
     }
 }
@@ -290,31 +328,7 @@ async function listMasterActiv(){
             console.log(ul2)
 
         }
-        // if(!list[i].employer){
-        //     let p = document.createElement("p")
-        //     p.textContent='Назначьте исполнителя'
-        //     let btnCompl = document.createElement("button")
-        //     btnCompl.textContent = 'Подтвердить заявку'
 
-        //     let listEmloyers = await window.api.getEmployers()
-        //     let select = document.createElement('select')
-        //     for(let j = 0; j<listEmloyers.length; j++){
-        //         let option = document.createElement("option")
-        //         option.value = listEmloyers[j].id_user
-        //         option.innerHTML = listEmloyers[j].fio
-        //         select.append(option)
-        //     }
-        //     li.append(p, btnCompl, select)
-
-        //     btnCompl.addEventListener("click", async()=>{
-        //         console.log(list[i])
-        //         await window.api.confirmRequest(select.value, list[i].id_request)
-        //         console.log(await window.api.getEmployers())
-        //         ul.innerHTML = ''
-        //         ulDefects.innerHTML = ''
-        //         Admin()
-        //     })
-        // } 
         
     }
     const arrBtnExec =  document.querySelectorAll(".execute")
@@ -325,7 +339,19 @@ async function listMasterActiv(){
     })
 })
 
-
 }
+
+// async function filters(block){
+//     let select = document.createElement("select")
+//     let list = await window.api.listDefects()
+
+//     for(let i = 0; i<list.length; i++){
+//         let option = document.createElement("option")
+//         option.value = list[i].id_defecte
+//         option.innerHTML = list[i].name_defecte
+//         select.append(option)
+//     }
+//     block.append(select)
+// }
 
 //Выполнение заявки
