@@ -92,7 +92,7 @@ btnAuthorization.addEventListener('click', async()=>{
     else{
         role = user[0].id_role
         id = user[0].id_user
-        alert(`You  ${role}`)
+ 
         if(role == 1){
             Admin()
         }
@@ -115,6 +115,9 @@ async function Admin(){
     let createReq = document.querySelector('.admin')
     createReq.classList.remove('hide')
     let list = await window.api.listReq()
+    let countReqEnd = 0
+    let statusConfirm = false
+
 
     let ulDefects = document.querySelector(".listDefect")
     let listDefects = await window.api.listDefects()
@@ -142,12 +145,14 @@ async function Admin(){
 
         if(list[i].work_status == 0){
             work_status = 'Ожидание'
+            statusConfirm = true
         } 
         else if(list[i].work_status == 1){
             work_status = 'В обработке'
         }
         else if(list[i].work_status == 2){
             work_status = 'Завершён'
+            countReqEnd++
         }
         li.innerHTML = `
         <p><b>Оборудование:</b> ${list[i].name_equipment}</p>
@@ -172,10 +177,11 @@ async function Admin(){
             li.append(p, btnCompl, select)
 
             btnCompl.addEventListener("click", async()=>{
-                console.log(list[i])
                 await window.api.confirmRequest(select.value, list[i].id_request)
-                console.log(await window.api.getEmployers())
-                ul.innerHTML = ''
+                let ul1 = document.querySelector('.listActivReqOk')
+                let ul2 = document.querySelector('.listCompletedReq')
+                ul1.innerHTML = ''
+                ul2.innerHTML = ''
                 ulDefects.innerHTML = ''
                 Admin()
             })
@@ -183,6 +189,13 @@ async function Admin(){
         ul.append(li)
     }
 
+    let count = document.querySelector('.countReqEnd')
+    count.textContent =''
+    count.textContent = `Выполнено: ${countReqEnd}`
+    
+    if(statusConfirm){
+        alert('У вас есть не подтвержденные заявки')
+    }
 
 }
 
